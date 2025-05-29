@@ -1,11 +1,17 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { TConstructorIngredient, TIngredient } from '@utils-types';
 
+type TOrderModalData = {
+  number: number;
+  name: string;
+  success: boolean;
+};
+
 type TConstructorState = {
   bun: TIngredient | null;
   ingredients: TConstructorIngredient[];
   orderRequest: boolean;
-  orderModalData: any | null;
+  orderModalData: TOrderModalData | null;
 };
 
 const initialState: TConstructorState = {
@@ -46,7 +52,10 @@ export const constructorSlice = createSlice({
     setOrderRequest: (state, action: PayloadAction<boolean>) => {
       state.orderRequest = action.payload;
     },
-    setOrderModalData: (state, action: PayloadAction<any>) => {
+    setOrderModalData: (
+      state,
+      action: PayloadAction<TOrderModalData | null>
+    ) => {
       state.orderModalData = action.payload;
     }
   }
@@ -71,8 +80,10 @@ export const selectConstructorItems = (state: {
   bun: state.constructor.bun,
   ingredients: state.constructor.ingredients
 });
+
 export const selectOrderRequest = (state: { constructor: TConstructorState }) =>
   state.constructor.orderRequest;
+
 export const selectOrderModalData = (state: {
   constructor: TConstructorState;
 }) => state.constructor.orderModalData;

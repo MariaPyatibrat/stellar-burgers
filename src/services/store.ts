@@ -4,12 +4,12 @@ import {
   useDispatch as dispatchHook,
   useSelector as selectorHook
 } from 'react-redux';
-
-// Временный пустой редьюсер до реализации настоящего
-const ingredientsReducer = (state = { items: [] }, action: any) => state;
+import { ingredientsReducer } from './slice/ingredientsSlice';
+import { constructorReducer } from './slice/constructorSlice';
 
 const rootReducer = {
-  ingredients: ingredientsReducer
+  ingredients: ingredientsReducer,
+  constructor: constructorReducer
 };
 
 const store = configureStore({
