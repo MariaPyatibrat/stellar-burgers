@@ -13,14 +13,14 @@ import {
 import '../../index.css';
 import styles from './app.module.css';
 import { useEffect } from 'react';
-import { useDispatch } from '@store';
+import { useAppDispatch } from '@store';
 import { AppHeader, Modal, IngredientDetails, OrderInfo } from '@components';
 import { ProtectedRoute } from '../protected-route';
 
 const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const background = location.state?.background;
 

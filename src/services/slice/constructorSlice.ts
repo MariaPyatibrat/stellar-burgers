@@ -1,24 +1,19 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { TConstructorIngredient, TIngredient } from '@utils-types';
+import { TIngredient } from '@utils-types';
+import { RootState } from '../store';
 
-type TOrderModalData = {
-  number: number;
-  name: string;
-  success: boolean;
+export type TConstructorIngredient = TIngredient & {
+  constructorId: string;
 };
 
 type TConstructorState = {
   bun: TIngredient | null;
   ingredients: TConstructorIngredient[];
-  orderRequest: boolean;
-  orderModalData: TOrderModalData | null;
 };
 
 const initialState: TConstructorState = {
   bun: null,
-  ingredients: [],
-  orderRequest: false,
-  orderModalData: null
+  ingredients: []
 };
 
 export const constructorSlice = createSlice({
@@ -26,37 +21,35 @@ export const constructorSlice = createSlice({
   initialState,
   reducers: {
     addBun: (state, action: PayloadAction<TIngredient>) => {
-      state.bun = action.payload;
+      state.bun = { ...action.payload };
     },
-    addIngredient: (state, action: PayloadAction<TConstructorIngredient>) => {
-      state.ingredients.push(action.payload);
+    addIngredient: {
+      reducer: (state, action: PayloadAction<TConstructorIngredient>) => {
+        state.ingredients.push(action.payload);
+      },
+      prepare: (ingredient: TIngredient) => ({
+        payload: {
+          ...ingredient,
+          constructorId: crypto.randomUUID()
+        }
+      })
     },
     removeIngredient: (state, action: PayloadAction<string>) => {
       state.ingredients = state.ingredients.filter(
-        (ing) => ing.id !== action.payload
+        (item) => item.constructorId !== action.payload
       );
     },
     moveIngredient: (
       state,
-      action: PayloadAction<{ from: number; to: number }>
+      action: PayloadAction<{ fromIndex: number; toIndex: number }>
     ) => {
-      const { from, to } = action.payload;
-      const item = state.ingredients[from];
-      state.ingredients.splice(from, 1);
-      state.ingredients.splice(to, 0, item);
+      const { fromIndex, toIndex } = action.payload;
+      const [removed] = state.ingredients.splice(fromIndex, 1);
+      state.ingredients.splice(toIndex, 0, removed);
     },
     clearConstructor: (state) => {
       state.bun = null;
       state.ingredients = [];
-    },
-    setOrderRequest: (state, action: PayloadAction<boolean>) => {
-      state.orderRequest = action.payload;
-    },
-    setOrderModalData: (
-      state,
-      action: PayloadAction<TOrderModalData | null>
-    ) => {
-      state.orderModalData = action.payload;
     }
   }
 });
@@ -66,24 +59,8 @@ export const {
   addIngredient,
   removeIngredient,
   moveIngredient,
-  clearConstructor,
-  setOrderRequest,
-  setOrderModalData
+  clearConstructor
 } = constructorSlice.actions;
 
+export const selectConstructorItems = (state: RootState) => state.constructor;
 export const constructorReducer = constructorSlice.reducer;
-
-// Селекторы
-export const selectConstructorItems = (state: {
-  constructor: TConstructorState;
-}) => ({
-  bun: state.constructor.bun,
-  ingredients: state.constructor.ingredients
-});
-
-export const selectOrderRequest = (state: { constructor: TConstructorState }) =>
-  state.constructor.orderRequest;
-
-export const selectOrderModalData = (state: {
-  constructor: TConstructorState;
-}) => state.constructor.orderModalData;
