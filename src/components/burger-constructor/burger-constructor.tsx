@@ -2,19 +2,21 @@ import { FC, useMemo } from 'react';
 import { useAppDispatch, useAppSelector } from '../../services/store';
 import { BurgerConstructorUI } from '@ui';
 import {
-  selectConstructorItems,
+  selectBurgerConstructorItems,
   clearConstructor
-} from '../../services/slice/constructorSlice';
+} from '../../services/slice/burgerConstructorSlice';
 import {
   createOrderThunk,
   selectOrder,
   clearOrder
 } from '../../services/slice/orderSlice';
-import { TConstructorIngredient } from '../../services/slice/constructorSlice';
+import { TConstructorIngredient } from '../../services/slice/burgerConstructorSlice';
 
 export const BurgerConstructor: FC = () => {
   const dispatch = useAppDispatch();
-  const { bun, ingredients = [] } = useAppSelector(selectConstructorItems); // Добавляем значение по умолчанию
+  const { bun, ingredients = [] } = useAppSelector(
+    selectBurgerConstructorItems
+  );
   const { order, isLoading } = useAppSelector(selectOrder);
 
   const onOrderClick = () => {
@@ -22,7 +24,7 @@ export const BurgerConstructor: FC = () => {
 
     const ingredientsIds = [
       bun._id,
-      ...ingredients.map((ing) => ing._id),
+      ...ingredients.map((ing: TConstructorIngredient) => ing._id),
       bun._id
     ];
 

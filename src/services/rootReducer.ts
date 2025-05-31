@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux';
 import { ingredientsReducer } from './slice/ingredientsSlice';
-import { constructorReducer } from './slice/constructorSlice';
+import { burgerConstructorReducer } from './slice/burgerConstructorSlice';
 import { orderReducer } from './slice/orderSlice';
 
 export const rootReducer = combineReducers({
   ingredients: ingredientsReducer,
-  constructor: constructorReducer,
+  burgerConstructor: burgerConstructorReducer,
   order: orderReducer
 });
 

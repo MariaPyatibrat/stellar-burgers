@@ -1,23 +1,26 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { ingredientsReducer } from './slice/ingredientsSlice';
-import { constructorReducer } from './slice/constructorSlice';
+import { burgerConstructorReducer } from './slice/burgerConstructorSlice';
 import { orderReducer } from './slice/orderSlice';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 export const store = configureStore({
   reducer: {
     ingredients: ingredientsReducer,
-    constructor: constructorReducer,
+    burgerConstructor: burgerConstructorReducer,
     order: orderReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredPaths: ['constructor.ingredients', 'constructor.bun'],
+        ignoredPaths: [
+          'burgerConstructor.ingredients',
+          'burgerConstructor.bun'
+        ],
         ignoredActions: [
-          'constructor/addIngredient',
-          'constructor/addBun',
-          'constructor/moveIngredient'
+          'burgerConstructor/addIngredient',
+          'burgerConstructor/addBun',
+          'burgerConstructor/moveIngredient'
         ]
       }
     })
