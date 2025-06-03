@@ -3,7 +3,7 @@ import { TIngredient } from '@utils-types';
 import { RootState } from '../store';
 
 export type TConstructorIngredient = TIngredient & {
-  constructorId: string;
+  id: string;
 };
 
 type TBurgerConstructorState = {
@@ -30,13 +30,13 @@ export const burgerConstructorSlice = createSlice({
       prepare: (ingredient: TIngredient) => ({
         payload: {
           ...ingredient,
-          constructorId: crypto.randomUUID()
+          id: crypto.randomUUID()
         }
       })
     },
     removeIngredient: (state, action: PayloadAction<string>) => {
       state.ingredients = state.ingredients.filter(
-        (item) => item.constructorId !== action.payload
+        (item) => item.id !== action.payload
       );
     },
     moveIngredient: (
