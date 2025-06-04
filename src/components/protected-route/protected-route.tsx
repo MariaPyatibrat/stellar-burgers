@@ -18,12 +18,10 @@ export const ProtectedRoute = ({
   const from = location.state?.from || '/';
   const isAuthorized = useAppSelector(getIsAuth);
 
-  // Если маршрут только для неавторизованных
   if (onlyUnAuth && isAuthorized) {
     return <Navigate to={from} replace />;
   }
 
-  // Если маршрут только для авторизованных
   if (forAuthorized && !isAuthorized) {
     return <Navigate to='/login' state={{ from: location }} replace />;
   }

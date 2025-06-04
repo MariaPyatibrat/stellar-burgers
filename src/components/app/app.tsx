@@ -12,15 +12,12 @@ import {
 } from '@pages';
 import '../../index.css';
 import styles from './app.module.css';
-import { useEffect } from 'react';
-import { useAppDispatch } from '@store';
 import { AppHeader, Modal, IngredientDetails, OrderInfo } from '@components';
 import { ProtectedRoute } from '../protected-route';
 
 const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
 
   const background = location.state?.background;
 
@@ -53,7 +50,7 @@ const App = () => {
         <Route
           path='/forgot-password'
           element={
-            <ProtectedRoute>
+            <ProtectedRoute onlyUnAuth>
               <ForgotPassword />
             </ProtectedRoute>
           }
@@ -61,7 +58,7 @@ const App = () => {
         <Route
           path='/reset-password'
           element={
-            <ProtectedRoute>
+            <ProtectedRoute onlyUnAuth>
               <ResetPassword />
             </ProtectedRoute>
           }
@@ -77,7 +74,7 @@ const App = () => {
         <Route
           path='/profile/orders'
           element={
-            <ProtectedRoute>
+            <ProtectedRoute forAuthorized>
               <ProfileOrders />
             </ProtectedRoute>
           }
@@ -95,7 +92,6 @@ const App = () => {
         <Route path='*' element={<NotFound404 />} />
       </Routes>
 
-      {/* Модалки */}
       {background && (
         <Routes>
           <Route
