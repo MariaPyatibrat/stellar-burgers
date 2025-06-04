@@ -4,13 +4,15 @@ import { burgerConstructorReducer } from './slice/burgerConstructorSlice';
 import { orderReducer } from './slice/orderSlice';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { feedReducer } from './slice/feedSlice';
+import authReducer from './slice/authSlice';
 
 export const store = configureStore({
   reducer: {
     ingredients: ingredientsReducer,
     burgerConstructor: burgerConstructorReducer,
     order: orderReducer,
-    feed: feedReducer
+    feed: feedReducer,
+    auth: authReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

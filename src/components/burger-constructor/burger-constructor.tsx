@@ -11,15 +11,25 @@ import {
   clearOrder
 } from '../../services/slice/orderSlice';
 import { TConstructorIngredient } from '../../services/slice/burgerConstructorSlice';
+import { useNavigate, useLocation } from 'react-router-dom'; // Добавляем useLocation
+import { getIsAuth } from '../../services/slice/authSlice';
 
 export const BurgerConstructor: FC = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const location = useLocation(); // Получаем текущий location
   const { bun, ingredients = [] } = useAppSelector(
     selectBurgerConstructorItems
   );
   const { order, isLoading } = useAppSelector(selectOrder);
+  const isAuth = useAppSelector(getIsAuth);
 
   const onOrderClick = () => {
+    if (!isAuth) {
+      navigate('/login', { state: { from: location.pathname } }); // Используем location.pathname
+      return;
+    }
+
     if (!bun) return;
 
     const ingredientsIds = [
