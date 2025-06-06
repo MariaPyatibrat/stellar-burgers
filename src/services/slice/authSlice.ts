@@ -51,4 +51,15 @@ export const updateUser =
     return data;
   };
 
+export const registerUser =
+  (userData: { name: string; email: string; password: string }) =>
+  async (dispatch: any) => {
+    const data = await registerUserApi(userData);
+    dispatch(setAuth(true));
+    dispatch(setUser(data.user));
+    localStorage.setItem('accessToken', data.accessToken);
+    localStorage.setItem('refreshToken', data.refreshToken);
+    return data;
+  };
+
 export default authSlice.reducer;
