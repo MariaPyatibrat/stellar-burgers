@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../store';
-import { logoutApi, updateUserApi, registerUserApi, loginUserApi } from '@api';
+import { logoutApi, updateUserApi, registerUserApi } from '@api';
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -14,6 +14,29 @@ const initialState: AuthState = {
   isAuthenticated: false,
   user: null
 };
+
+// Асинхронный thunk для обновления пользователя
+export const updateUser = createAsyncThunk(
+  'auth/updateUser',
+  async (userData: { name?: string; email?: string; password?: string }) => {
+    const data = await updateUserApi(userData);
+    return data.user;
+  }
+);
+
+// Аналогично, если нужно, можно переписать registerUser с createAsyncThunk
+export const registerUser = createAsyncThunk(
+  'auth/registerUser',
+  async (
+    userData: { name: string; email: string; password: string },
+    thunkAPI
+  ) => {
+    const data = await registerUserApi(userData);
+    localStorage.setItem('accessToken', data.accessToken);
+    localStorage.setItem('refreshToken', data.refreshToken);
+    return data;
+  }
+);
 
 export const authSlice = createSlice({
   name: 'auth',
@@ -29,6 +52,16 @@ export const authSlice = createSlice({
       state.isAuthenticated = false;
       state.user = null;
     }
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.user = action.payload;
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.isAuthenticated = true;
+        state.user = action.payload.user;
+      });
   }
 });
 
@@ -37,29 +70,10 @@ export const { setAuth, setUser, clearAuth } = authSlice.actions;
 export const getIsAuth = (state: RootState) => state.auth.isAuthenticated;
 export const getUser = (state: RootState) => state.auth.user;
 
-// Экспортируем thunks
+// Экспортируем thunk logout
 export const logoutUser = () => async (dispatch: any) => {
   await logoutApi();
   dispatch(clearAuth());
 };
-
-export const updateUser =
-  (userData: { name?: string; email?: string; password?: string }) =>
-  async (dispatch: any) => {
-    const data = await updateUserApi(userData);
-    dispatch(setUser(data.user));
-    return data;
-  };
-
-export const registerUser =
-  (userData: { name: string; email: string; password: string }) =>
-  async (dispatch: any) => {
-    const data = await registerUserApi(userData);
-    dispatch(setAuth(true));
-    dispatch(setUser(data.user));
-    localStorage.setItem('accessToken', data.accessToken);
-    localStorage.setItem('refreshToken', data.refreshToken);
-    return data;
-  };
 
 export default authSlice.reducer;
