@@ -9,7 +9,9 @@ export const Feed: FC = () => {
   const { orders, total, totalToday, isLoading } = useAppSelector(selectFeeds);
 
   useEffect(() => {
-    dispatch(getFeeds());
+    dispatch(getFeeds()).then(() => {
+      console.log('Orders:', orders);
+    });
   }, [dispatch]);
 
   const handleGetFeeds = () => {
