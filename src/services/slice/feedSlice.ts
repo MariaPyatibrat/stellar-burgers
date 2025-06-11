@@ -27,13 +27,7 @@ export const getFeeds = createAsyncThunk('feed/getAll', async () => {
 const feedSlice = createSlice({
   name: 'feed',
   initialState,
-  reducers: {
-    setFeedData: (state, action: PayloadAction<TOrdersData>) => {
-      state.orders = action.payload.orders;
-      state.total = action.payload.total;
-      state.totalToday = action.payload.totalToday;
-    }
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(getFeeds.pending, (state) => {
@@ -53,6 +47,5 @@ const feedSlice = createSlice({
   }
 });
 
-export const feedActions = feedSlice.actions;
 export const feedReducer = feedSlice.reducer;
 export const selectFeeds = (state: RootState) => state.feed;

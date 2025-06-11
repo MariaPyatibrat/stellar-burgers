@@ -1,13 +1,12 @@
 import { Preloader } from '@ui';
 import { FeedUI } from '@ui-pages';
-import { TOrder } from '@utils-types';
 import { FC, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../services/store';
 import { getFeeds, selectFeeds } from '../../services/slice/feedSlice';
 
 export const Feed: FC = () => {
   const dispatch = useAppDispatch();
-  const { orders, total, totalToday } = useAppSelector(selectFeeds);
+  const { orders, total, totalToday, isLoading } = useAppSelector(selectFeeds);
 
   useEffect(() => {
     dispatch(getFeeds());
@@ -17,7 +16,7 @@ export const Feed: FC = () => {
     dispatch(getFeeds());
   };
 
-  if (!orders.length) {
+  if (isLoading || !orders.length) {
     return <Preloader />;
   }
 
