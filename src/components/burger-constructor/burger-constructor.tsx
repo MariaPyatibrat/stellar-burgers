@@ -13,7 +13,7 @@ import {
 import { TConstructorIngredient } from '../../services/slice/burgerConstructorSlice';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getIsAuth } from '../../services/slice/authSlice';
-import { getFeeds } from '../../services/slice/feedSlice'; // Добавленный импорт
+import { getFeeds } from '../../services/slice/feedSlice';
 
 export const BurgerConstructor: FC = () => {
   const dispatch = useAppDispatch();
@@ -42,7 +42,7 @@ export const BurgerConstructor: FC = () => {
     dispatch(createOrderThunk(ingredientsIds))
       .unwrap()
       .then(() => {
-        dispatch(getFeeds()); // Обновляем ленту заказов
+        dispatch(getFeeds());
       })
       .catch((error) => {
         console.error('Ошибка при оформлении заказа:', error);

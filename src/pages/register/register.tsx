@@ -22,7 +22,6 @@ export const Register: FC = () => {
     dispatch(registerUser({ name: userName, email, password }))
       .then((data) => {
         if (data) {
-          // Проверяем, что данные есть
           navigate(location.state?.from || '/');
         }
       })

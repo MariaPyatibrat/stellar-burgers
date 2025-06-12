@@ -1,6 +1,7 @@
 import { FC, SyntheticEvent, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAppDispatch } from '../../services/store';
+import { setCookie } from '../../utils/cookie';
 import { setAuth, setUser } from '../../services/slice/authSlice';
 import { loginUserApi } from '@api'; // Исправленный импорт
 import { LoginUI } from '@ui-pages';
@@ -20,7 +21,7 @@ export const Login: FC = () => {
         dispatch(setAuth(true));
         dispatch(setUser(data.user));
         localStorage.setItem('accessToken', data.accessToken);
-        localStorage.setItem('refreshToken', data.refreshToken);
+        setCookie('accessToken', data.accessToken);
         navigate(location.state?.from || '/');
       })
       .catch(() => {});
