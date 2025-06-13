@@ -69,7 +69,6 @@ export const authSlice = createSlice({
 export const { setAuth, setUser, clearAuth } = authSlice.actions;
 export const getIsAuth = (state: RootState) => state.auth.isAuthenticated;
 export const getUser = (state: RootState) => state.auth.user;
-export const selectUserOrders = (state: RootState) => state.feed.orders;
 
 // Экспортируем thunk logout
 export const logoutUser = () => async (dispatch: any) => {

@@ -5,17 +5,21 @@ import { TIngredient } from '@utils-types';
 import { useAppSelector } from '../../services/store';
 import { selectIngredients } from '../../services/slice/ingredientsSlice';
 import { selectFeeds } from '../../services/slice/feedSlice';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 
 export const OrderInfo: FC = () => {
   const { number } = useParams();
-  const { orders } = useAppSelector(selectFeeds);
+  const location = useLocation();
+  const { orders, userOrders } = useAppSelector(selectFeeds);
   const ingredients = useAppSelector(selectIngredients);
+  const isProfileOrder = location.pathname.includes('/profile/orders');
 
   const order = useMemo(() => {
-    if (!orders || !orders.length || !number) return null;
-    return orders.find((order) => order.number === Number(number));
-  }, [orders, number]);
+    if (!number) return null;
+    return isProfileOrder
+      ? userOrders.find((order) => order.number === Number(number))
+      : orders.find((order) => order.number === Number(number));
+  }, [number, orders, userOrders, isProfileOrder]);
 
   const orderInfo = useMemo(() => {
     if (!order || !ingredients || !ingredients.length) return null;
