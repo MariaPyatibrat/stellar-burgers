@@ -10,19 +10,16 @@ import { useParams, useLocation } from 'react-router-dom';
 export const OrderInfo: FC = () => {
   const { number } = useParams();
   const location = useLocation();
-  const { orders, userOrders } = useAppSelector(selectFeeds);
+  const { orders } = useAppSelector(selectFeeds);
   const ingredients = useAppSelector(selectIngredients);
-  const isProfileOrder = location.pathname.includes('/profile/orders');
 
   const order = useMemo(() => {
     if (!number) return null;
-    return isProfileOrder
-      ? userOrders.find((order) => order.number === Number(number))
-      : orders.find((order) => order.number === Number(number));
-  }, [number, orders, userOrders, isProfileOrder]);
+    return orders.find((order) => order.number === Number(number));
+  }, [number, orders]);
 
   const orderInfo = useMemo(() => {
-    if (!order || !ingredients || !ingredients.length) return null;
+    if (!order || !ingredients || ingredients.length === 0) return null;
 
     const date = new Date(order.createdAt);
 
@@ -31,7 +28,7 @@ export const OrderInfo: FC = () => {
     }
 
     const ingredientsInfo = order.ingredients.reduce<IIngredientsWithCount>(
-      (acc, item) => {
+      (acc: IIngredientsWithCount, item: string) => {
         if (!acc[item]) {
           const ingredient = ingredients.find((ing) => ing._id === item);
           if (ingredient) {
@@ -45,11 +42,11 @@ export const OrderInfo: FC = () => {
         }
         return acc;
       },
-      {}
+      {} as IIngredientsWithCount
     );
 
     const total = Object.values(ingredientsInfo).reduce(
-      (acc, item) => acc + item.price * item.count,
+      (acc: number, item) => acc + item.price * item.count,
       0
     );
 
@@ -61,7 +58,7 @@ export const OrderInfo: FC = () => {
     };
   }, [order, ingredients]);
 
-  if (!orderInfo) {
+  if (!orderInfo || ingredients.length === 0) {
     return <Preloader />;
   }
 

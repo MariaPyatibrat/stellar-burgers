@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import {
   ConstructorPage,
@@ -14,12 +15,18 @@ import '../../index.css';
 import styles from './app.module.css';
 import { AppHeader, Modal, IngredientDetails, OrderInfo } from '@components';
 import { ProtectedRoute } from '../protected-route';
+import { useAppDispatch } from '../../services/store';
+import { fetchIngredients } from '../../services/slice/ingredientsSlice';
 
 const App = () => {
+  const dispatch = useAppDispatch();
   const location = useLocation();
   const navigate = useNavigate();
-
   const background = location.state?.background;
+
+  useEffect(() => {
+    dispatch(fetchIngredients()); // Загружаем ингредиенты при старте приложения
+  }, [dispatch]);
 
   const handleClose = () => {
     navigate(-1);

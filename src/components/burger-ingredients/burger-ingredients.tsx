@@ -5,14 +5,17 @@ import { BurgerIngredientsUI } from '../ui/burger-ingredients';
 import {
   selectBuns,
   selectMains,
-  selectSauces
+  selectSauces,
+  selectIngredients
 } from '../../services/slice/ingredientsSlice';
 import { useAppSelector } from '../../services/store';
+import { TIngredient } from '@utils-types';
 
 export const BurgerIngredients: FC = () => {
-  const buns = useAppSelector(selectBuns);
-  const mains = useAppSelector(selectMains);
-  const sauces = useAppSelector(selectSauces);
+  const buns = useAppSelector(selectBuns) as TIngredient[];
+  const mains = useAppSelector(selectMains) as TIngredient[];
+  const sauces = useAppSelector(selectSauces) as TIngredient[];
+  const ingredients = useAppSelector(selectIngredients) as TIngredient[];
 
   const [currentTab, setCurrentTab] = useState<TTabMode>('bun');
   const titleBunRef = useRef<HTMLHeadingElement>(null);
