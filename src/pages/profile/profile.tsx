@@ -86,14 +86,6 @@ export const Profile: FC = () => {
 
   if (!isReady) return null;
 
-  // Отладочный вывод:
-  console.log('Form debug:', {
-    nameMatch: formValue.name === initialValues.name,
-    emailMatch: formValue.email === initialValues.email,
-    passwordLength: formValue.password.length,
-    isFormChanged
-  });
-
   return (
     <ProfileUI
       formValue={formValue}
