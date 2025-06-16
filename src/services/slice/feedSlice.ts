@@ -21,17 +21,21 @@ const initialState: TFeedState = {
   error: null
 };
 
-export const getFeeds = createAsyncThunk('feed/getAll', async () => {
-  const response = await getFeedsApi();
-  return response;
-});
+// export const getFeeds = createAsyncThunk('feed/getAll', async () => {
+//   const result = await getFeedsApi();
+//   return result;
+// });
+
+export const getFeeds = createAsyncThunk(
+  'feed/getAll',
+  async () => await getFeedsApi()
+);
 
 export const getUserOrders = createAsyncThunk(
   'feed/getUserOrders',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await getOrdersApi();
-      return response;
+      return await getOrdersApi();
     } catch (error) {
       return rejectWithValue('Не удалось загрузить заказы пользователя');
     }
