@@ -50,6 +50,7 @@ export const Login: FC<LoginPageProps> = () => {
       dispatch(setAuth(true));
       dispatch(setUser(data.user));
       localStorage.setItem('accessToken', data.accessToken);
+      localStorage.setItem('refreshToken', data.refreshToken);
       setCookie('accessToken', data.accessToken);
 
       setStatus({

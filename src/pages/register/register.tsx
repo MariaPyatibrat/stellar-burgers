@@ -2,9 +2,16 @@ import { FC, SyntheticEvent, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAppDispatch } from '../../services/store';
 import { setAuth, setUser } from '../../services/slice/authSlice';
-import { registerUserApi } from '@api';
 import { registerUser } from '../../services/slice/authSlice';
 import { RegisterUI } from '@ui-pages';
+
+interface RegisterResponse {
+  user: {
+    name: string;
+    email: string;
+  };
+  accessToken: string;
+}
 
 export const Register: FC = () => {
   const [email, setEmail] = useState('');
@@ -20,10 +27,11 @@ export const Register: FC = () => {
     setErrorText('');
 
     dispatch(registerUser({ name: userName, email, password }))
-      .then((data) => {
-        if (data) {
-          navigate(location.state?.from || '/');
-        }
+      .unwrap()
+      .then((data: RegisterResponse) => {
+        dispatch(setAuth(true));
+        dispatch(setUser(data.user));
+        navigate(location.state?.from || '/');
       })
       .catch((err: { message?: string }) => {
         setErrorText(err?.message || 'Ошибка регистрации');
