@@ -59,7 +59,6 @@ export const orderSlice = createSlice({
       .addCase(
         getOrderById.fulfilled,
         (state, action: PayloadAction<TOrderResponse>) => {
-          console.log('getOrderById action --> ', action.payload);
           const { orders } = action.payload;
           state.order = orders[0];
         }
