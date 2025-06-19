@@ -17,7 +17,11 @@ import { AppHeader, Modal, IngredientDetails, OrderInfo } from '@components';
 import { ProtectedRoute } from '../protected-route';
 import { useAppDispatch, useAppSelector } from '../../services/store';
 import { fetchIngredients } from '../../services/slice/ingredientsSlice';
-import { checkUserAuth, getIsAuth } from '../../services/slice/authSlice';
+import {
+  checkUser,
+  checkUserAuth,
+  getIsAuth
+} from '../../services/slice/authSlice';
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -30,15 +34,11 @@ const App = () => {
     dispatch(fetchIngredients());
 
     if (localStorage.getItem('accessToken')) {
-      dispatch(checkUserAuth());
+      dispatch(checkUserAuth()).finally(() => dispatch(checkUser()));
+    } else {
+      dispatch(checkUser());
     }
   }, [dispatch]);
-
-  useEffect(() => {
-    if (isAuth === false && location.pathname.startsWith('/profile')) {
-      navigate('/login', { state: { from: location } });
-    }
-  }, [isAuth, location, navigate]);
 
   const handleClose = () => {
     navigate(-1);

@@ -14,7 +14,7 @@ export const OrderCardUI: FC<OrderCardUIProps> = memo(
 
     return (
       <Link
-        to={`/feed/${orderInfo.number}`}
+        to={orderInfo.number.toString()}
         state={{ background: location }}
         className={`p-6 mb-4 mr-2 ${styles.order}`}
       >

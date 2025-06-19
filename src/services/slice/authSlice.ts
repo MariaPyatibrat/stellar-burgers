@@ -5,13 +5,16 @@ import { deleteCookie } from '../../utils/cookie';
 
 interface AuthState {
   isAuthenticated: boolean;
+  isCheckUser: boolean;
   user: {
     name: string;
     email: string;
   } | null;
+  error?: string;
 }
 
 const initialState: AuthState = {
+  isCheckUser: false,
   isAuthenticated: false,
   user: null
 };
@@ -73,6 +76,9 @@ export const authSlice = createSlice({
     setAuth: (state, action: PayloadAction<boolean>) => {
       state.isAuthenticated = action.payload;
     },
+    checkUser: (state) => {
+      state.isCheckUser = true;
+    },
     setUser: (state, action: PayloadAction<AuthState['user']>) => {
       state.user = action.payload;
     },
@@ -109,8 +115,9 @@ export const authSlice = createSlice({
   }
 });
 
-export const { setAuth, setUser, clearAuth } = authSlice.actions;
+export const { setAuth, setUser, clearAuth, checkUser } = authSlice.actions;
 export const getIsAuth = (state: RootState) => state.auth.isAuthenticated;
 export const getUser = (state: RootState) => state.auth.user;
+export const getIsCheckUser = (state: RootState) => state.auth.isCheckUser;
 
 export default authSlice.reducer;
