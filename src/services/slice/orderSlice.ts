@@ -1,6 +1,6 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { orderBurgerApi } from '../../utils/burger-api';
-import { TOrder } from '@utils-types';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { orderBurgerApi, getOrderByNumberApi } from '../../utils/burger-api';
+import { TOrder, TOrderResponse } from '@utils-types';
 import { RootState } from '../store';
 
 type TOrderState = {
@@ -27,6 +27,11 @@ export const createOrderThunk = createAsyncThunk<TOrder, string[]>(
   }
 );
 
+export const getOrderById = createAsyncThunk(
+  'order/getById',
+  async (id: number) => await getOrderByNumberApi(id)
+);
+
 export const orderSlice = createSlice({
   name: 'order',
   initialState,
@@ -50,7 +55,15 @@ export const orderSlice = createSlice({
         state.isLoading = false;
         state.error =
           (action.payload as string) || 'Ошибка при создании заказа';
-      });
+      })
+      .addCase(
+        getOrderById.fulfilled,
+        (state, action: PayloadAction<TOrderResponse>) => {
+          console.log('getOrderById action --> ', action.payload);
+          const { orders } = action.payload;
+          state.order = orders[0];
+        }
+      );
   }
 });
 

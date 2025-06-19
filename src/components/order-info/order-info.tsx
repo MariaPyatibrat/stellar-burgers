@@ -2,37 +2,52 @@ import { FC, useMemo, useEffect } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
-import { useAppDispatch, useAppSelector } from '../../services/store';
+import { useAppSelector, useAppDispatch } from '../../services/store';
 import { selectIngredients } from '../../services/slice/ingredientsSlice';
-import { getFeeds, selectFeeds } from '../../services/slice/feedSlice';
+import { selectFeeds } from '../../services/slice/feedSlice';
 import { useParams, useLocation } from 'react-router-dom';
+import { getOrderById, selectOrder } from '../../services/slice/orderSlice';
 
-export const OrderInfo: FC = () => {
-  const dispatch = useAppDispatch();
-  useEffect(() => {
-    dispatch(getFeeds());
-  }, [dispatch]);
+interface OrderInfoProps {
+  source: 'feed' | 'userOrders';
+}
 
+export const OrderInfo: FC<OrderInfoProps> = ({ source }) => {
   const { number } = useParams();
   const location = useLocation();
-  const { orders } = useAppSelector(selectFeeds);
+  const { orders, userOrders } = useAppSelector(selectFeeds);
+  const { order } = useAppSelector(selectOrder);
   const ingredients = useAppSelector(selectIngredients);
+  const dispatch = useAppDispatch();
 
-  const order = useMemo(() => {
+  let orderDataFromOrdersList = useMemo(() => {
     if (!number) return null;
-    return orders.find((order) => order.number === Number(number));
-  }, [number, orders]);
+    if (source === 'feed') {
+      return orders.find((order) => order.number === Number(number));
+    } else {
+      return userOrders.find((order) => order.number === Number(number));
+    }
+  }, [number, orders, userOrders]);
 
+  useEffect(() => {
+    if (!orderDataFromOrdersList) {
+      dispatch(getOrderById(Number(number)));
+    }
+  }, [dispatch, number]);
+
+  const orderDataById = useMemo(() => order, [order]);
+
+  let orderData = orderDataFromOrdersList || orderDataById;
   const orderInfo = useMemo(() => {
-    if (!order || !ingredients || ingredients.length === 0) return null;
+    if (!orderData || !ingredients || ingredients.length === 0) return null;
 
-    const date = new Date(order.createdAt);
+    const date = new Date(orderData.createdAt);
 
     interface IIngredientsWithCount {
       [key: string]: TIngredient & { count: number };
     }
 
-    const ingredientsInfo = order.ingredients.reduce<IIngredientsWithCount>(
+    const ingredientsInfo = orderData.ingredients.reduce<IIngredientsWithCount>(
       (acc: IIngredientsWithCount, item: string) => {
         if (!acc[item]) {
           const ingredient = ingredients.find((ing) => ing._id === item);
@@ -56,14 +71,14 @@ export const OrderInfo: FC = () => {
     );
 
     return {
-      ...order,
+      ...orderData,
       ingredientsInfo,
       date,
       total
     };
-  }, [order, ingredients]);
+  }, [orderData, ingredients]);
 
-  if (!orderInfo || ingredients.length === 0) {
+  if (!orderInfo || !ingredients || ingredients.length === 0) {
     return <Preloader />;
   }
 
