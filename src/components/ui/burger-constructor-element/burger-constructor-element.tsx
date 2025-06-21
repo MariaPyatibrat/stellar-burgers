@@ -13,22 +13,35 @@ export const BurgerConstructorElementUI: FC<BurgerConstructorElementUIProps> =
       handleMoveUp,
       handleMoveDown,
       handleClose
-    }) => (
-      <li className={`${styles.element} mb-4 mr-2`}>
-        <MoveButton
-          handleMoveDown={handleMoveDown}
-          handleMoveUp={handleMoveUp}
-          isUpDisabled={index === 0}
-          isDownDisabled={index === totalItems - 1}
-        />
-        <div className={`${styles.element_fullwidth} ml-2`}>
-          <ConstructorElement
-            text={ingredient.name}
-            price={ingredient.price}
-            thumbnail={ingredient.image}
-            handleClose={handleClose}
-          />
-        </div>
-      </li>
-    )
+    }) => {
+      const isBun = ingredient.type === 'bun';
+      const canMoveUp = !isBun && index > 0;
+      const canMoveDown = !isBun && index < totalItems - 1;
+
+      // Создаем пустые функции по умолчанию
+      const defaultMoveHandler = () => {};
+
+      return (
+        <li className={`${styles.element} mb-4 mr-2`}>
+          {!isBun && (
+            <MoveButton
+              handleMoveDown={canMoveDown ? handleMoveDown : defaultMoveHandler}
+              handleMoveUp={canMoveUp ? handleMoveUp : defaultMoveHandler}
+              isUpDisabled={!canMoveUp}
+              isDownDisabled={!canMoveDown}
+            />
+          )}
+          <div
+            className={`${styles.element_fullwidth} ${!isBun ? 'ml-2' : ''}`}
+          >
+            <ConstructorElement
+              text={ingredient.name}
+              price={ingredient.price}
+              thumbnail={ingredient.image}
+              handleClose={!isBun ? handleClose : undefined}
+            />
+          </div>
+        </li>
+      );
+    }
   );
