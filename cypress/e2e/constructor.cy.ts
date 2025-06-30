@@ -1,4 +1,6 @@
 describe('Burger Constructor', () => {
+    const INGREDIENT_ITEM_SELECTOR = '[data-cy="ingredient-item"]';
+
     beforeEach(() => {
         cy.setCookie('accessToken', 'Bearer test-token');
         cy.window().then((win) => {
@@ -36,11 +38,11 @@ describe('Burger Constructor', () => {
     });
 
     it('должен загрузить ингредиенты', () => {
-        cy.get('[data-cy="ingredient-item"]').should('have.length.greaterThan', 0);
+        cy.get(INGREDIENT_ITEM_SELECTOR).should('have.length.greaterThan', 0);
     });
 
     it('должен добавить булку в конструктор', () => {
-        cy.get('[data-cy="ingredient-item"]').first()
+        cy.get(INGREDIENT_ITEM_SELECTOR).first()
             .parent()
             .find('button')
             .click({ force: true });
@@ -51,7 +53,7 @@ describe('Burger Constructor', () => {
     });
 
     it('должен закрывать модальное окно по крестику', () => {
-        cy.get('[data-cy="ingredient-item"]').first().click();
+        cy.get(INGREDIENT_ITEM_SELECTOR).first().click();
 
         cy.get('[data-cy="modal"]').should('be.visible');
 
@@ -61,13 +63,13 @@ describe('Burger Constructor', () => {
     });
 
     it('должен очищать конструктор после создания заказа', () => {
-        cy.get('[data-cy="ingredient-item"]').first()
+        cy.get(INGREDIENT_ITEM_SELECTOR).first()
             .parent()
             .find('button')
             .click({ force: true });
 
         cy.contains('span', 'Начинки').click();
-        cy.get('[data-cy="ingredient-item"]').not(':contains("булка")').first()
+        cy.get(INGREDIENT_ITEM_SELECTOR).not(':contains("булка")').first()
             .parent()
             .find('button')
             .click({ force: true });
@@ -91,7 +93,7 @@ describe('Burger Constructor', () => {
             const overlay = win.document.getElementById('webpack-dev-server-client-overlay');
             if (overlay) overlay.remove();
         });
-        cy.get('[data-cy="ingredient-item"]').first()
+        cy.get(INGREDIENT_ITEM_SELECTOR).first()
             .parent()
             .find('button')
             .click({ force: true });
