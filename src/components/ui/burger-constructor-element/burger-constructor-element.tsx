@@ -18,7 +18,6 @@ export const BurgerConstructorElementUI: FC<BurgerConstructorElementUIProps> =
       const canMoveUp = !isBun && index > 0;
       const canMoveDown = !isBun && index < totalItems - 1;
 
-      // Создаем пустые функции по умолчанию
       const defaultMoveHandler = () => {};
 
       return (

@@ -50,6 +50,42 @@ describe('Burger Constructor', () => {
             .should('have.length.greaterThan', 0);
     });
 
+    it('должен закрывать модальное окно по крестику', () => {
+        cy.get('[data-cy="ingredient-item"]').first().click();
+
+        cy.get('[data-cy="modal"]').should('be.visible');
+
+        cy.get('[data-cy="modal-close"]').click();
+
+        cy.get('[data-cy="modal"]').should('not.exist');
+    });
+
+    it('должен очищать конструктор после создания заказа', () => {
+        cy.get('[data-cy="ingredient-item"]').first()
+            .parent()
+            .find('button')
+            .click({ force: true });
+
+        cy.contains('span', 'Начинки').click();
+        cy.get('[data-cy="ingredient-item"]').not(':contains("булка")').first()
+            .parent()
+            .find('button')
+            .click({ force: true });
+
+        cy.contains('button', 'Оформить заказ')
+            .should('be.visible')
+            .click({ force: true });
+
+        cy.wait('@createOrder', { timeout: 15000 });
+
+        cy.get('[data-cy="modal"]').siblings('div').first().click({ force: true });
+
+        cy.get('[data-cy="constructor-bun"]').should('not.exist');
+        cy.get('[data-cy="constructor-ingredients"]').should('not.exist');
+        cy.contains('Выберите булки').should('exist');
+        cy.contains('Выберите начинку').should('exist');
+    });
+
     it('должен создать заказ', () => {
         cy.window().then((win) => {
             const overlay = win.document.getElementById('webpack-dev-server-client-overlay');

@@ -13,7 +13,7 @@ interface AuthState {
   error?: string;
 }
 
-const initialState: AuthState = {
+export const initialState: AuthState = {
   isCheckUser: false,
   isAuthenticated: false,
   user: null

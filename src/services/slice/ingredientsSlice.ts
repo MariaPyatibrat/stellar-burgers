@@ -8,7 +8,7 @@ import { TIngredient } from '@utils-types';
 import { getIngredientsApi } from '../../utils/burger-api';
 import { RootState } from '../store';
 
-type TIngredientsState = {
+export type TIngredientsState = {
   ingredients: TIngredient[];
   isLoading: boolean;
   error: string | null;
