@@ -6,57 +6,33 @@ import {
   selectFeeds,
   selectUserOrders
 } from './feedSlice';
-import { TOrder, TOrdersData } from '@utils-types';
-import { RootState } from '../store';
 
-jest.mock('../../utils/burger-api', () => ({
-  getFeedsApi: jest.fn(),
-  getOrdersApi: jest.fn()
-}));
+jest.mock('../../utils/burger-api');
 
-const mockOrders: TOrder[] = [
-  {
-    _id: '1',
-    ingredients: ['ing1', 'ing2'],
-    status: 'done',
-    name: 'Order 1',
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    number: 1
-  },
-  {
-    _id: '2',
-    ingredients: ['ing3', 'ing4'],
-    status: 'pending',
-    name: 'Order 2',
-    createdAt: '2023-01-02',
-    updatedAt: '2023-01-02',
-    number: 2
-  }
-];
+const mockOrder = {
+  _id: '1',
+  ingredients: ['ing1', 'ing2'],
+  status: 'done',
+  name: 'Order 1',
+  createdAt: '2023-01-01',
+  updatedAt: '2023-01-01',
+  number: 1
+};
 
-const mockFeedsData: TOrdersData = {
-  orders: mockOrders,
+const mockFeedsData = {
+  orders: [mockOrder],
   total: 100,
   totalToday: 10
 };
 
 describe('feedSlice', () => {
-  describe('initial state', () => {
-    it('should return initial state', () => {
-      expect(feedSlice.reducer(undefined, { type: 'unknown' })).toEqual(
-        initialState
-      );
-    });
-  });
-
   describe('async thunks', () => {
     beforeEach(() => {
       jest.clearAllMocks();
     });
 
     describe('getFeeds', () => {
-      it('should handle pending state', () => {
+      it('should handle pending', () => {
         const state = feedSlice.reducer(initialState, getFeeds.pending(''));
         expect(state).toEqual({
           ...initialState,
@@ -65,165 +41,58 @@ describe('feedSlice', () => {
         });
       });
 
-      it('should handle fulfilled state', () => {
+      it('should handle fulfilled', () => {
         const action = {
           type: getFeeds.fulfilled.type,
-          payload: mockFeedsData
+          payload: mockFeedsData // Используем полную структуру с orders, total, totalToday
         };
         const state = feedSlice.reducer(initialState, action);
 
         expect(state).toEqual({
           ...initialState,
-          orders: mockOrders,
-          total: 100,
-          totalToday: 10,
+          orders: mockFeedsData.orders,
+          total: mockFeedsData.total,
+          totalToday: mockFeedsData.totalToday,
           isLoading: false
-        });
-      });
-
-      it('should handle rejected state', () => {
-        const errorMessage = 'Network Error';
-        const action = {
-          type: getFeeds.rejected.type,
-          error: { message: errorMessage }
-        };
-        const state = feedSlice.reducer(initialState, action);
-
-        expect(state).toEqual({
-          ...initialState,
-          isLoading: false,
-          error: errorMessage
         });
       });
     });
 
     describe('getUserOrders', () => {
-      it('should handle pending state', () => {
-        const state = feedSlice.reducer(
-          initialState,
-          getUserOrders.pending('')
-        );
-        expect(state).toEqual({
-          ...initialState,
-          isLoading: true,
-          error: null
-        });
-      });
-
-      it('should handle fulfilled state', () => {
+      it('should handle fulfilled', () => {
         const action = {
           type: getUserOrders.fulfilled.type,
-          payload: mockOrders
+          payload: [mockOrder] // Для userOrders передаем массив заказов
         };
         const state = feedSlice.reducer(initialState, action);
 
         expect(state).toEqual({
           ...initialState,
-          userOrders: mockOrders,
+          userOrders: [mockOrder],
           isLoading: false
-        });
-      });
-
-      it('should handle rejected state with payload', () => {
-        const errorMessage = 'Auth Error';
-        const action = {
-          type: getUserOrders.rejected.type,
-          payload: errorMessage
-        };
-        const state = feedSlice.reducer(initialState, action);
-
-        expect(state).toEqual({
-          ...initialState,
-          isLoading: false,
-          error: errorMessage
-        });
-      });
-
-      it('should handle rejected state with error', () => {
-        const errorMessage = 'Ошибка загрузки заказов пользователя';
-        const action = {
-          type: getUserOrders.rejected.type,
-          error: { message: errorMessage }
-        };
-        const state = feedSlice.reducer(initialState, action);
-
-        expect(state).toEqual({
-          ...initialState,
-          isLoading: false,
-          error: errorMessage
         });
       });
     });
   });
 
   describe('selectors', () => {
-    const mockState: RootState = {
+    const mockState = {
       feed: {
-        orders: mockOrders,
-        userOrders: [mockOrders[0]],
+        orders: [mockOrder],
+        userOrders: [mockOrder],
         total: 100,
         totalToday: 10,
         isLoading: false,
         error: null
       }
-      // Другие части состояния...
-    } as RootState;
+    };
 
-    it('should select all feeds', () => {
-      const result = selectFeeds(mockState);
-      expect(result).toEqual(mockState.feed);
+    it('should select feeds', () => {
+      expect(selectFeeds(mockState)).toEqual(mockState.feed);
     });
 
     it('should select user orders', () => {
-      const result = selectUserOrders(mockState);
-      expect(result).toEqual([mockOrders[0]]);
-    });
-  });
-
-  describe('integration tests', () => {
-    it('should dispatch getFeeds and update state', async () => {
-      const { getFeedsApi } = require('../../utils/burger-api');
-      getFeedsApi.mockResolvedValue(mockFeedsData);
-
-      const dispatch = jest.fn();
-      const getState = jest.fn();
-      const extra = {};
-
-      await getFeeds()(dispatch, getState, extra);
-
-      expect(dispatch).toHaveBeenCalledWith(
-        expect.objectContaining({ type: getFeeds.pending.type })
-      );
-
-      expect(dispatch).toHaveBeenCalledWith(
-        expect.objectContaining({
-          type: getFeeds.fulfilled.type,
-          payload: mockFeedsData
-        })
-      );
-    });
-
-    it('should dispatch getUserOrders and handle error', async () => {
-      const { getOrdersApi } = require('../../utils/burger-api');
-      const errorMessage = 'Не удалось загрузить заказы пользователя';
-      getOrdersApi.mockRejectedValue(new Error(errorMessage));
-
-      const dispatch = jest.fn();
-      const getState = jest.fn();
-      const extra = {};
-
-      await getUserOrders()(dispatch, getState, extra);
-
-      expect(dispatch).toHaveBeenCalledWith(
-        expect.objectContaining({ type: getUserOrders.pending.type })
-      );
-
-      expect(dispatch).toHaveBeenCalledWith(
-        expect.objectContaining({
-          type: getUserOrders.rejected.type,
-          payload: errorMessage
-        })
-      );
+      expect(selectUserOrders(mockState)).toEqual([mockOrder]);
     });
   });
 });

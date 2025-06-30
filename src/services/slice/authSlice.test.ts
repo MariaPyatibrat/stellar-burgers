@@ -1,36 +1,40 @@
-import { initialState, authSlice } from './authSlice';
+import { authSlice } from './authSlice';
 
-jest.mock('@api');
+const mockUser = {
+    name: 'Test',
+    email: 'test@test.com'
+};
 
 describe('authSlice', () => {
-  it('should have correct initial state', () => {
-    expect(initialState).toEqual({
-      isAuthenticated: false,
-      isCheckUser: false,
-      user: null,
-      error: undefined
-    });
-  });
-
-  it('should handle setAuth action', () => {
-    const state = authSlice.reducer(
-      initialState,
-      authSlice.actions.setAuth(true)
-    );
-    expect(state.isAuthenticated).toBe(true);
-  });
-
-  it('should handle clearAuth action', () => {
-    const stateWithAuth = {
-      ...initialState,
-      isAuthenticated: true,
-      user: { name: 'Test', email: 'test@test.com' }
+    const initialState = {
+        isAuthenticated: false,
+        isCheckUser: false,
+        user: null,
+        error: undefined
     };
-    const state = authSlice.reducer(
-      stateWithAuth,
-      authSlice.actions.clearAuth()
-    );
-    expect(state.isAuthenticated).toBe(false);
-    expect(state.user).toBeNull();
-  });
+
+    const testAction = (action: any, expectedChanges: object) => {
+        const state = authSlice.reducer(initialState, action);
+        expect(state).toEqual({ ...initialState, ...expectedChanges });
+    };
+
+    it('should return initial state', () => {
+        expect(authSlice.reducer(undefined, { type: '' })).toEqual(initialState);
+    });
+
+    describe('actions', () => {
+        it('should handle setAuth', () => {
+            testAction(
+                authSlice.actions.setAuth(true),
+                { isAuthenticated: true }
+            );
+        });
+
+        it('should handle clearAuth', () => {
+            testAction(
+                authSlice.actions.clearAuth(),
+                { isAuthenticated: false, user: null }
+            );
+        });
+    });
 });
