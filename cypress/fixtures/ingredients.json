@@ -1,0 +1,110 @@
+{
+  "success": true,
+  "data": [
+    {
+      "_id": "643d69a5c3f7b9001cfa093c",
+      "name": "Краторная булка N-200i",
+      "type": "bun",
+      "price": 1255,
+      "image": "https://code.s3.yandex.net/react/code/bun-02.png"
+    },
+    {
+      "_id": "643d69a5c3f7b9001cfa0941",
+      "name": "Биокотлета из марсианской Магнолии",
+      "type": "main",
+      "price": 424,
+      "image": "https://code.s3.yandex.net/react/code/meat-01.png"
+    },
+    {
+      "_id": "643d69a5c3f7b9001cfa093e",
+      "name": "Филе Люминесцентного тетраодонтимформа",
+      "type": "main",
+      "price": 988,
+      "image": "https://code.s3.yandex.net/react/code/meat-03.png"
+    },
+    {
+      "_id": "643d69a5c3f7b9001cfa0942",
+      "name": "Соус Spicy-X",
+      "type": "sauce",
+      "price": 90,
+      "image": "https://code.s3.yandex.net/react/code/sauce-02.png"
+    },
+    {
+      "_id": "643d69a5c3f7b9001cfa0943",
+      "name": "Соус фирменный Space Sauce",
+      "type": "sauce",
+      "price": 80,
+      "image": "https://code.s3.yandex.net/react/code/sauce-04.png"
+    },
+    {
+      "_id": "643d69a5c3f7b9001cfa093f",
+      "name": "Мясо бессмертных моллюсков Protostomia",
+      "type": "main",
+      "price": 1337,
+      "image": "https://code.s3.yandex.net/react/code/meat-02.png"
+    },
+    {
+      "_id": "643d69a5c3f7b9001cfa0940",
+      "name": "Говяжий метеорит (отбивная)",
+      "type": "main",
+      "price": 3000,
+      "image": "https://code.s3.yandex.net/react/code/meat-04.png"
+    },
+    {
+      "_id": "643d69a5c3f7b9001cfa093d",
+      "name": "Флюоресцентная булка R2-D3",
+      "type": "bun",
+      "price": 988,
+      "image": "https://code.s3.yandex.net/react/code/bun-01.png"
+    },
+    {
+      "_id": "643d69a5c3f7b9001cfa0944",
+      "name": "Соус традиционный галактический",
+      "type": "sauce",
+      "price": 15,
+      "image": "https://code.s3.yandex.net/react/code/sauce-03.png"
+    },
+    {
+      "_id": "643d69a5c3f7b9001cfa0945",
+      "name": "Соус с шипами Антарианского плоскоходца",
+      "type": "sauce",
+      "price": 88,
+      "image": "https://code.s3.yandex.net/react/code/sauce-01.png"
+    },
+    {
+      "_id": "643d69a5c3f7b9001cfa0946",
+      "name": "Хрустящие минеральные кольца",
+      "type": "main",
+      "price": 300,
+      "image": "https://code.s3.yandex.net/react/code/mineral_rings.png"
+    },
+    {
+      "_id": "643d69a5c3f7b9001cfa0947",
+      "name": "Плоды Фалленианского дерева",
+      "type": "main",
+      "price": 874,
+      "image": "https://code.s3.yandex.net/react/code/sp_1.png"
+    },
+    {
+      "_id": "643d69a5c3f7b9001cfa0948",
+      "name": "Кристаллы марсианских альфа-сахаридов",
+      "type": "main",
+      "price": 762,
+      "image": "https://code.s3.yandex.net/react/code/core.png"
+    },
+    {
+      "_id": "643d69a5c3f7b9001cfa0949",
+      "name": "Мини-салат Экзо-Плантаго",
+      "type": "main",
+      "price": 4400,
+      "image": "https://code.s3.yandex.net/react/code/salad.png"
+    },
+    {
+      "_id": "643d69a5c3f7b9001cfa094a",
+      "name": "Сыр с астероидной плесенью",
+      "type": "main",
+      "price": 4142,
+      "image": "https://code.s3.yandex.net/react/code/cheese.png"
+    }
+  ]
+}
