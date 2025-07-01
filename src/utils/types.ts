@@ -42,3 +42,44 @@ export type TUser = {
 };
 
 export type TTabMode = 'bun' | 'sauce' | 'main';
+
+export type TIngredientsState = {
+  ingredients: TIngredient[];
+  isLoading: boolean;
+  error: string | null;
+};
+
+export type TBurgerConstructorState = {
+  bun: TIngredient | null;
+  ingredients: TConstructorIngredient[];
+};
+
+export type TOrderState = {
+  order: TOrder | null;
+  isLoading: boolean;
+  error: string | null;
+};
+
+export type TFeedState = {
+  orders: TOrder[];
+  userOrders: TOrder[];
+  total: number;
+  totalToday: number;
+  isLoading: boolean;
+  error: string | null;
+};
+
+export type AuthState = {
+  isAuthenticated: boolean;
+  isCheckUser: boolean;
+  user: TUser | null;
+  error?: string;
+};
+
+export type RootState = {
+  ingredients: TIngredientsState;
+  burgerConstructor: TBurgerConstructorState;
+  order: TOrderState;
+  feed: TFeedState;
+  auth: AuthState;
+};

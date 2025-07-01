@@ -1,3 +1,4 @@
+import { createMockRootState } from '../test-utils';
 import {
   ingredientsReducer,
   fetchIngredients,
@@ -70,13 +71,13 @@ describe('ingredientsSlice', () => {
   });
 
   describe('selectors', () => {
-    const mockState = {
+    const mockState = createMockRootState({
       ingredients: {
         ingredients: mockIngredients,
         isLoading: false,
         error: null
       }
-    };
+    });
 
     it('should select all ingredients', () => {
       expect(selectIngredients(mockState)).toEqual(mockIngredients);

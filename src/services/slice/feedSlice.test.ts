@@ -1,3 +1,4 @@
+import { createMockRootState } from '../test-utils';
 import {
   feedSlice,
   initialState,
@@ -76,7 +77,7 @@ describe('feedSlice', () => {
   });
 
   describe('selectors', () => {
-    const mockState = {
+    const mockState = createMockRootState({
       feed: {
         orders: [mockOrder],
         userOrders: [mockOrder],
@@ -85,7 +86,7 @@ describe('feedSlice', () => {
         isLoading: false,
         error: null
       }
-    };
+    });
 
     it('should select feeds', () => {
       expect(selectFeeds(mockState)).toEqual(mockState.feed);

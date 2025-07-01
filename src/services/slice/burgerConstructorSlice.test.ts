@@ -38,6 +38,11 @@ describe('burgerConstructorSlice', () => {
   };
 
   describe('reducers', () => {
+    it('should return initial state', () => {
+      expect(burgerConstructorSlice.reducer(undefined, { type: '' }))
+          .toEqual(initialState);
+    });
+
     it('should add ingredient', testAddIngredient);
 
     it('should remove ingredient', () => {
@@ -46,6 +51,26 @@ describe('burgerConstructorSlice', () => {
           burgerConstructorSlice.actions.removeIngredient('1')
       );
       expect(state.ingredients).toEqual([]);
+    });
+
+    it('should move ingredient', () => {
+      const initialStateWithIngredients = {
+        bun: null,
+        ingredients: [
+          { ...mockIngredient, id: '1' },
+          { ...mockIngredient, id: '2' }
+        ]
+      };
+
+      const state = burgerConstructorSlice.reducer(
+          initialStateWithIngredients,
+          burgerConstructorSlice.actions.moveIngredient({
+            fromIndex: 0,
+            toIndex: 1
+          })
+      );
+
+      expect(state.ingredients.map(i => i.id)).toEqual(['2', '1']);
     });
   });
 });
