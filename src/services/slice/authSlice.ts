@@ -3,7 +3,7 @@ import type { RootState } from '../store';
 import { logoutApi, updateUserApi, registerUserApi, getUserApi } from '@api';
 import { deleteCookie } from '../../utils/cookie';
 
-interface AuthState {
+export interface AuthState {
   isAuthenticated: boolean;
   isCheckUser: boolean;
   user: {
@@ -13,7 +13,7 @@ interface AuthState {
   error?: string;
 }
 
-const initialState: AuthState = {
+export const initialState: AuthState = {
   isCheckUser: false,
   isAuthenticated: false,
   user: null

@@ -6,7 +6,7 @@ export type TConstructorIngredient = TIngredient & {
   id: string;
 };
 
-type TBurgerConstructorState = {
+export type TBurgerConstructorState = {
   bun: TIngredient | null;
   ingredients: TConstructorIngredient[];
 };
@@ -30,7 +30,9 @@ export const burgerConstructorSlice = createSlice({
       prepare: (ingredient: TIngredient) => ({
         payload: {
           ...ingredient,
-          id: crypto.randomUUID()
+          id:
+            globalThis.crypto?.randomUUID() ||
+            Math.random().toString(36).substring(2, 11)
         }
       })
     },

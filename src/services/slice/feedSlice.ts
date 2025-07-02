@@ -12,7 +12,7 @@ type TFeedState = {
   error: string | null;
 };
 
-const initialState: TFeedState = {
+export const initialState: TFeedState = {
   orders: [],
   userOrders: [],
   total: 0,
@@ -42,7 +42,7 @@ export const getUserOrders = createAsyncThunk(
   }
 );
 
-const feedSlice = createSlice({
+export const feedSlice = createSlice({
   name: 'feed',
   initialState,
   reducers: {},

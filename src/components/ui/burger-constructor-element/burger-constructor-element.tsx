@@ -18,11 +18,13 @@ export const BurgerConstructorElementUI: FC<BurgerConstructorElementUIProps> =
       const canMoveUp = !isBun && index > 0;
       const canMoveDown = !isBun && index < totalItems - 1;
 
-      // Создаем пустые функции по умолчанию
       const defaultMoveHandler = () => {};
 
       return (
-        <li className={`${styles.element} mb-4 mr-2`}>
+        <li
+          className={`${styles.element} mb-4 mr-2`}
+          data-cy='constructor-ingredient'
+        >
           {!isBun && (
             <MoveButton
               handleMoveDown={canMoveDown ? handleMoveDown : defaultMoveHandler}
