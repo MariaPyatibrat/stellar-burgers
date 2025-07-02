@@ -1,4 +1,5 @@
-import { authSlice, AuthState } from './authSlice';
+// authSlice.test.ts
+import { authSlice, initialState } from './authSlice';
 
 const mockUser = {
     name: 'Test',
@@ -6,19 +7,12 @@ const mockUser = {
 };
 
 describe('authSlice', () => {
-    const initialState: AuthState = {
-        isAuthenticated: false,
-        isCheckUser: false,
-        user: null,
-        error: undefined
-    };
-
-    it('should return initial state', () => {
+    it('должен возвращать начальное состояние', () => {
         expect(authSlice.reducer(undefined, { type: '' })).toEqual(initialState);
     });
 
-    describe('sync actions', () => {
-        it('should handle setAuth', () => {
+    describe('синхронные действия', () => {
+        it('должен обрабатывать setAuth', () => {
             const state = authSlice.reducer(
                 initialState,
                 authSlice.actions.setAuth(true)
@@ -26,7 +20,7 @@ describe('authSlice', () => {
             expect(state.isAuthenticated).toBe(true);
         });
 
-        it('should handle setUser', () => {
+        it('должен обрабатывать setUser', () => {
             const state = authSlice.reducer(
                 initialState,
                 authSlice.actions.setUser(mockUser)
@@ -34,7 +28,7 @@ describe('authSlice', () => {
             expect(state.user).toEqual(mockUser);
         });
 
-        it('should handle clearAuth', () => {
+        it('должен обрабатывать clearAuth', () => {
             const state = authSlice.reducer(
                 { ...initialState, isAuthenticated: true, user: mockUser },
                 authSlice.actions.clearAuth()
@@ -46,7 +40,7 @@ describe('authSlice', () => {
             });
         });
 
-        it('should handle checkUser', () => {
+        it('должен обрабатывать checkUser', () => {
             const state = authSlice.reducer(
                 initialState,
                 authSlice.actions.checkUser()
@@ -55,8 +49,8 @@ describe('authSlice', () => {
         });
     });
 
-    describe('async thunks', () => {
-        it('should handle registerUser/fulfilled', () => {
+    describe('асинхронные санки', () => {
+        it('должен обрабатывать registerUser/fulfilled', () => {
             const action = {
                 type: 'auth/registerUser/fulfilled',
                 payload: { user: mockUser }
@@ -69,7 +63,7 @@ describe('authSlice', () => {
             });
         });
 
-        it('should handle updateUser/fulfilled', () => {
+        it('должен обрабатывать updateUser/fulfilled', () => {
             const action = {
                 type: 'auth/updateUser/fulfilled',
                 payload: mockUser
@@ -81,7 +75,7 @@ describe('authSlice', () => {
             expect(state.user).toEqual(mockUser);
         });
 
-        it('should handle checkUserAuth/fulfilled', () => {
+        it('должен обрабатывать checkUserAuth/fulfilled', () => {
             const action = {
                 type: 'auth/checkUserAuth/fulfilled',
                 payload: mockUser
@@ -94,7 +88,7 @@ describe('authSlice', () => {
             });
         });
 
-        it('should handle checkUserAuth/rejected', () => {
+        it('должен обрабатывать checkUserAuth/rejected', () => {
             const action = {
                 type: 'auth/checkUserAuth/rejected'
             };
@@ -109,7 +103,7 @@ describe('authSlice', () => {
             });
         });
 
-        it('should handle logoutUser/fulfilled', () => {
+        it('должен обрабатывать logoutUser/fulfilled', () => {
             const action = {
                 type: 'auth/logout/fulfilled'
             };
@@ -124,7 +118,7 @@ describe('authSlice', () => {
             });
         });
 
-        it('should handle logoutUser/rejected', () => {
+        it('должен обрабатывать logoutUser/rejected', () => {
             const action = {
                 type: 'auth/logout/rejected'
             };

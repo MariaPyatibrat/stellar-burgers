@@ -1,5 +1,20 @@
-describe('Burger Constructor', () => {
+describe('Конструктор бургеров', () => {
+    // Основные селекторы
     const INGREDIENT_ITEM_SELECTOR = '[data-cy="ingredient-item"]';
+    const MODAL_SELECTOR = '[data-cy="modal"]';
+    const MODAL_CLOSE_SELECTOR = '[data-cy="modal-close"]';
+    const MODAL_OVERLAY_SELECTOR = '[data-cy="modal-overlay"]';
+    const CONSTRUCTOR_SELECTOR = '[data-cy="constructor"]';
+    const ORDER_BUTTON_SELECTOR = 'button:contains("Оформить заказ")';
+    const CONSTRUCTOR_BUN_SELECTOR = '[data-cy="constructor-bun"]';
+    const CONSTRUCTOR_INGREDIENTS_SELECTOR = '[data-cy="constructor-ingredients"]';
+    const ORDER_NUMBER_SELECTOR = '[data-cy="order-number"]';
+    const TEXT_LARGE_SELECTOR = '.text_type_digits-large';
+
+    // Текстовые константы
+    const BUNS_SECTION_TEXT = 'Выберите булки';
+    const FILLINGS_SECTION_TEXT = 'Выберите начинку';
+    const FILLINGS_TAB_TEXT = 'Начинки';
 
     beforeEach(() => {
         cy.setCookie('accessToken', 'Bearer test-token');
@@ -18,21 +33,15 @@ describe('Burger Constructor', () => {
             }
         }).as('createOrder');
 
-        window.localStorage.setItem(
-            'refreshToken',
-            JSON.stringify('test-refresh-token')
-        );
-        window.localStorage.setItem(
-            'accessToken',
-            JSON.stringify('test-access-token')
-        );
+        window.localStorage.setItem('refreshToken', JSON.stringify('test-refresh-token'));
+        window.localStorage.setItem('accessToken', JSON.stringify('test-access-token'));
 
         cy.visit('/');
         cy.wait('@getIngredients');
-        cy.get('[data-cy="constructor"]').should('be.visible');
+        cy.get(CONSTRUCTOR_SELECTOR).should('be.visible');
     });
 
-    afterEach(function () {
+    afterEach(() => {
         cy.clearLocalStorage();
         cy.clearCookies();
     });
@@ -47,19 +56,16 @@ describe('Burger Constructor', () => {
             .find('button')
             .click({ force: true });
 
-        cy.get('[data-cy="constructor"]')
+        cy.get(CONSTRUCTOR_SELECTOR)
             .children()
             .should('have.length.greaterThan', 0);
     });
 
     it('должен закрывать модальное окно по крестику', () => {
         cy.get(INGREDIENT_ITEM_SELECTOR).first().click();
-
-        cy.get('[data-cy="modal"]').should('be.visible');
-
-        cy.get('[data-cy="modal-close"]').click();
-
-        cy.get('[data-cy="modal"]').should('not.exist');
+        cy.get(MODAL_SELECTOR).should('be.visible');
+        cy.get(MODAL_CLOSE_SELECTOR).click();
+        cy.get(MODAL_SELECTOR).should('not.exist');
     });
 
     it('должен очищать конструктор после создания заказа', () => {
@@ -68,24 +74,24 @@ describe('Burger Constructor', () => {
             .find('button')
             .click({ force: true });
 
-        cy.contains('span', 'Начинки').click();
+        cy.contains('span', FILLINGS_TAB_TEXT).click();
         cy.get(INGREDIENT_ITEM_SELECTOR).not(':contains("булка")').first()
             .parent()
             .find('button')
             .click({ force: true });
 
-        cy.contains('button', 'Оформить заказ')
+        cy.get(ORDER_BUTTON_SELECTOR)
             .should('be.visible')
             .click({ force: true });
 
         cy.wait('@createOrder', { timeout: 15000 });
 
-        cy.get('[data-cy="modal"]').siblings('div').first().click({ force: true });
+        cy.get(MODAL_OVERLAY_SELECTOR).click({ force: true });
 
-        cy.get('[data-cy="constructor-bun"]').should('not.exist');
-        cy.get('[data-cy="constructor-ingredients"]').should('not.exist');
-        cy.contains('Выберите булки').should('exist');
-        cy.contains('Выберите начинку').should('exist');
+        cy.get(CONSTRUCTOR_BUN_SELECTOR).should('not.exist');
+        cy.get(CONSTRUCTOR_INGREDIENTS_SELECTOR).should('not.exist');
+        cy.contains(BUNS_SECTION_TEXT).should('exist');
+        cy.contains(FILLINGS_SECTION_TEXT).should('exist');
     });
 
     it('должен создать заказ', () => {
@@ -93,12 +99,13 @@ describe('Burger Constructor', () => {
             const overlay = win.document.getElementById('webpack-dev-server-client-overlay');
             if (overlay) overlay.remove();
         });
+
         cy.get(INGREDIENT_ITEM_SELECTOR).first()
             .parent()
             .find('button')
             .click({ force: true });
 
-        cy.contains('button', 'Оформить заказ')
+        cy.get(ORDER_BUTTON_SELECTOR)
             .scrollIntoView()
             .should('be.visible')
             .click({ force: true });
@@ -108,17 +115,17 @@ describe('Burger Constructor', () => {
             expect(interception.response?.body.order.number).to.equal(123456);
         });
 
-        cy.get('[data-cy="modal"]', { timeout: 10000 })
+        cy.get(MODAL_SELECTOR, { timeout: 10000 })
             .should('exist')
             .and('be.visible')
             .then(($modal) => {
                 expect($modal).to.be.visible;
 
-                const orderNumber = $modal.find('[data-cy="order-number"]');
+                const orderNumber = $modal.find(ORDER_NUMBER_SELECTOR);
                 if (orderNumber.length > 0) {
                     expect(orderNumber.text()).to.contain('123456');
                 } else {
-                    const altSelector = $modal.find('.text_type_digits-large');
+                    const altSelector = $modal.find(TEXT_LARGE_SELECTOR);
                     if (altSelector.length > 0) {
                         expect(altSelector.text()).to.contain('123456');
                     } else {
@@ -127,9 +134,9 @@ describe('Burger Constructor', () => {
                 }
             });
 
-        cy.get('[data-cy="modal-overlay"]')
+        cy.get(MODAL_OVERLAY_SELECTOR)
             .click('left', { force: true });
 
-        cy.get('[data-cy="modal"]').should('not.exist');
+        cy.get(MODAL_SELECTOR).should('not.exist');
     });
 });
